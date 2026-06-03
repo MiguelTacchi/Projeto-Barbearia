@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barbearia Elite — Cliente</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+
+  <header class="bg-gray-900 text-white shadow-lg">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">💈</span>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Barbearia Elite</h1>
+          <p class="text-xs text-gray-400">👤 Painel do Cliente</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <p id="user-nome" class="text-sm font-semibold hidden sm:block"></p>
+        <button onclick="sair()" class="bg-gray-700 hover:bg-gray-600 text-sm px-4 py-2 rounded-xl transition-colors font-medium">
+          Sair
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- Abas -->
+    <div class="flex gap-2 mb-8">
+      <button onclick="trocarAba('agendar')" id="aba-agendar"
+        class="px-5 py-2.5 rounded-xl font-semibold text-sm bg-yellow-500 text-white shadow-md transition-all">
+        📅 Novo Agendamento
+      </button>
+      <button onclick="trocarAba('historico')" id="aba-historico"
+        class="px-5 py-2.5 rounded-xl font-semibold text-sm bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 transition-all">
+        📋 Meus Agendamentos
+      </button>
+    </div>
+
+    <!-- Painel agendar -->
+    <div id="painel-agendar" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+
+      <!-- Confirmação -->
+      <div id="confirmacao" class="hidden text-center py-4">
+        <div class="text-6xl mb-4">✅</div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-1">Agendamento Realizado!</h2>
+        <p class="text-gray-500 text-sm mb-6">Aguarde a confirmação do barbeiro.</p>
+        <div id="confirmacao-detalhes"
+          class="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 max-w-xs mx-auto text-left space-y-2 text-sm mb-6"></div>
+        <button onclick="novoAgendamento()"
+          class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition">
+          Fazer outro agendamento
+        </button>
+      </div>
+
+      <!-- Formulário -->
+      <div id="form-container">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Agendar Horário</h2>
+        <form id="form-agendar" onsubmit="criarAgendamento(event)" class="space-y-6">
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de serviço</label>
+            <select id="servico" required onchange="atualizarBotao()"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none bg-white">
+              <option value="">Selecione o serviço...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Data</label>
+            <input id="data" type="date" required onchange="carregarHorarios()"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"/>
+            <p id="aviso-data" class="hidden mt-1.5 text-sm text-red-600 font-medium">
+              Atendemos apenas de segunda a sexta-feira.
+            </p>
+          </div>
+
+          <div id="container-horarios" class="hidden">
+            <label class="block text-sm font-semibold text-gray-700 mb-3">Horário disponível</label>
+            <div id="grade-horarios" class="grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
+            <p id="aviso-lotado" class="hidden mt-3 text-sm text-red-600 text-center">
+              Todos os horários estão ocupados. Escolha outra data.
+            </p>
+          </div>
+
+          <div id="erro-form" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
+
+          <button id="btn-agendar" type="submit" disabled
+            class="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all shadow-md">
+            Confirmar Agendamento
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Painel histórico -->
+    <div id="painel-historico" class="hidden">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Meus Agendamentos</h2>
+      <div id="lista-agendamentos">
+        <div class="text-center py-8 text-gray-400">Carregando...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cliente.js"></script>
+</body>
+</html>
